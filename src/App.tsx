@@ -1,12 +1,18 @@
-import './App.css'
+import SideNav from './components/SideNav';
+import NavBar from './components/NavBar';
+
 
 function App() {
 
   return (
-    <>
-     <h1>hi</h1>
-    </>
-  )
+    <div className="flex flex-col h-screen">
+      <NavBar />
+      <div className="flex flex-1">
+        <SideNav />
+        
+      </div>
+    </div>
+  );
 }
 
 export default App
