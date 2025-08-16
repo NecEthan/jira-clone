@@ -1,5 +1,6 @@
 import SideNav from './components/SideNav';
 import NavBar from './components/NavBar';
+import Kanban from './components/Kanban';
 
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
       <NavBar />
       <div className="flex flex-1">
         <SideNav />
-        
+        <Kanban />
       </div>
     </div>
   );
