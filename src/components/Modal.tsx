@@ -21,7 +21,7 @@ export default function Modal({ open, onClose, children }: { open: boolean, onCl
       <div
         className="fixed overlay inset-0 z-50 flex items-center justify-center"
       >
-  <div className="bg-white p-8 shadow-lg w-full max-w-xl min-w-xl md:min-w-xl mx-auto">
+  <div className="bg-white p-4 shadow-lg w-full max-w-xl min-w-xl md:min-w-xl mx-auto">
               {children}
           <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={onClose}>Close</button>
         </div>

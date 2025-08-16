@@ -1,0 +1,9 @@
+.avatar {
+    margin-left: -.25rem;
+    display: flex;
+    cursor: pointer;
+    border-radius: 9999px;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .1s;
+}

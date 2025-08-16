@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { useTicketContext } from '../context/useTicketContext';
+import { fetchTickets } from '../services/services';
 
 function CreateTicketForm({ onClose }: { onClose: () => void }) {
+        const { tickets, setTickets } = useTicketContext();
+    
   const [form, setForm] = useState({
     type: 'Bug',
     priority: 'Low',
@@ -8,8 +12,8 @@ function CreateTicketForm({ onClose }: { onClose: () => void }) {
     reporter: '',
     assignees: '',
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
@@ -19,8 +23,8 @@ function CreateTicketForm({ onClose }: { onClose: () => void }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    // setLoading(true);
+    // setError(null);
     setSuccess(false);
     try {
       const res = await fetch('http://localhost:4000/api/tickets', {
@@ -31,6 +35,7 @@ function CreateTicketForm({ onClose }: { onClose: () => void }) {
         })
       });
       if (!res.ok) throw new Error('Failed to create ticket');
+      fetchTickets().then((tickets) => setTickets(tickets))
       setSuccess(true);
       setForm({
         type: 'Bug',
@@ -44,12 +49,12 @@ function CreateTicketForm({ onClose }: { onClose: () => void }) {
 
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        // setError(err.message);
       } else {
-        setError('Unknown error');
+        // setError('Unknown error');
       }
     } finally {
-      setLoading(false);
+    //   setLoading(false);
     }
   }
 
@@ -115,7 +120,7 @@ function CreateTicketForm({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
           />
         </div>
-        {error && <div className="text-red-500 text-sm">{error}</div>}
+        {/* {error && <div className="text-red-500 text-sm">{error}</div>} */}
         {success && <div className="text-green-600 text-sm">Ticket created!</div>}
         <div className="flex justify-end">
           <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" disabled={loading}>{loading ? 'Creating...' : 'Create'}</button>
