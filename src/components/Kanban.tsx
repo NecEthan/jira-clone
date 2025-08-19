@@ -5,9 +5,10 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import type { DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import './Kanban.css';
 import Modal from './Modal';
-import { fetchTickets } from '../services/services';
-import type { Ticket } from '../shared/Ticket.interface';
+import { fetchTickets, updateTicket } from '../services/services';
+import type { ITicket } from '../shared/Ticket.interface';
 import { useTicketContext } from '../context/useTicketContext';
+import Ticket from './Ticket';
 
 function Kanban() {
 
@@ -17,11 +18,15 @@ function Kanban() {
         getTickets();
     }, [])
 
+    useEffect(() => {
+
+    }, [])
+
     const [showModal, setShowModal] = useState(false);
-    const [selectedTicket, setSelectedTicket] = useState<Ticket>();
+    const [selectedTicket, setSelectedTicket] = useState<ITicket>();
 
     const getTickets = () => {
-        fetchTickets().then(setTickets);
+        fetchTickets().then((tickets) => setTickets(tickets));
     }
 
     function onShowModal() {
@@ -38,21 +43,13 @@ function Kanban() {
 
 
 
-    //   const [tickets, setTickets] = useState<Ticket[]>([
-    //     { id: 1, description: 'Set up project', priority: 'High', type: 'bug', reporter: 'Alice', status: 'todo' },
-    //     { id: 2, description: 'Build Kanban UI', priority: 'Medium',type: 'bug', reporter: 'Bob', status: 'inprogress' },
-    //     { id: 4, description: 'QA review', priority: 'Medium',type: 'bug', reporter: 'Bob', status: 'qa' },
-    //     { id: 3, description: 'Write tests', priority: 'Low',type: 'bug', reporter: 'Carol', status: 'done' },
-    //   ]);
-
-
-
     const grouped = columns.reduce((acc, col) => {
         acc[col.key] = tickets.filter(t => (t.status || 'todo') === col.key);
         return acc;
-    }, {} as Record<string, Ticket[]>);
+    }, {} as Record<string, ITicket[]>);
 
     const onDragEnd = (result: any) => {
+        console.log('Drag ended', result);
         const { destination, source, draggableId } = result;
         if (!destination) return;
         if (
@@ -63,18 +60,27 @@ function Kanban() {
         }
         const ticketId = parseInt(draggableId.replace('ticket-', ''));
         const ticket = tickets.find(t => t.id === ticketId);
+        console.log('Ticket:', ticket);
         if (!ticket) return;
         // Remove from old column and insert into new column at correct index
         const filtered = tickets.filter(t => t.id !== ticketId);
-        const updated = [
+        const updatedTickets = [
             ...filtered.slice(0, destination.index),
             { ...ticket, status: destination.droppableId },
             ...filtered.slice(destination.index)
         ];
-        setTickets(updated);
+
+
+        if (destination.droppableId !== source.droppableId) {
+            setTickets(updatedTickets);
+            const updatedColumnTicket = { ...ticket, status: destination.droppableId };
+            updateTicket(ticketId, updatedColumnTicket);
+        }
+        
+        setTickets(updatedTickets);
     };
 
-    const onTicketClick = (ticket: Ticket) => {
+    const onTicketClick = (ticket: ITicket) => {
         setSelectedTicket(ticket);
         onShowModal();
     };

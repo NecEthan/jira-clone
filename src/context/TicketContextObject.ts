@@ -1,9 +1,9 @@
 import { createContext } from 'react';
-import type { Ticket } from '../shared/Ticket.interface';
+import type { ITicket } from '../shared/Ticket.interface';
 
 export type TicketContextType = {
-  tickets: Ticket[];
-  setTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
+  tickets: ITicket[];
+  setTickets: React.Dispatch<React.SetStateAction<ITicket[]>>;
 };
 
 export const TicketContext = createContext<TicketContextType | undefined>(undefined);

@@ -3,7 +3,7 @@ import { useTicketContext } from '../context/useTicketContext';
 import { fetchTickets } from '../services/services';
 
 function CreateTicketForm({ onClose }: { onClose: () => void }) {
-        const { tickets, setTickets } = useTicketContext();
+    const { tickets, setTickets } = useTicketContext();
     
   const [form, setForm] = useState({
     type: 'Bug',

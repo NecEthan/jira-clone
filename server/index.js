@@ -6,8 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Get all tickets
-app.get('/api/tickets', (req, res) => {
+app.get('/api/get/tickets', (req, res) => {
   db.all('SELECT * FROM tickets ORDER BY created_at DESC', [], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
@@ -16,10 +15,7 @@ app.get('/api/tickets', (req, res) => {
   });
 });
 
-// Create a new ticket
-app.post('/api/tickets', (req, res) => {
-    console.log(req)
-    console.log(res)
+app.post('/api/save/ticket', (req, res) => {
   const { type, priority, description, reporter, assignees } = req.body;
   db.run(
     `INSERT INTO tickets (type, priority, description, reporter, assignees) VALUES (?, ?, ?, ?, ?)`,
@@ -33,6 +29,26 @@ app.post('/api/tickets', (req, res) => {
           return res.status(500).json({ error: err.message });
         }
         res.status(201).json(row);
+      });
+    }
+  );
+});
+
+app.patch('/api/update/ticket/:id', (req, res) => {
+  const { id } = req.params;
+  const { type, priority, description, reporter, assignees, status } = req.body;
+  db.run(
+    `UPDATE tickets SET type = ?, priority = ?, description = ?, reporter = ?, assignees = ?, status = ? WHERE id = ?`,
+    [type, priority, description, reporter, Array.isArray(assignees) ? assignees.join(',') : assignees, status, id],
+    function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      db.get('SELECT * FROM tickets WHERE id = ?', [id], (err, row) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        res.json(row);
       });
     }
   );

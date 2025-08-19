@@ -18,6 +18,7 @@ db.serialize(() => {
     description TEXT,
     reporter TEXT,
     assignees TEXT,
+    status TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 });

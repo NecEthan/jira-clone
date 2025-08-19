@@ -1,4 +1,4 @@
-export interface Ticket {
+export interface ITicket {
     id: number;
     description: string;
     priority: string;
